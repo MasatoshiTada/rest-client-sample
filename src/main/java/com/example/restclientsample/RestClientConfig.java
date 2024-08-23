@@ -1,6 +1,7 @@
 package com.example.restclientsample;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.web.client.RestClientBuilderConfigurer;
 import org.springframework.boot.web.client.ClientHttpRequestFactories;
 import org.springframework.boot.web.client.ClientHttpRequestFactorySettings;
 import org.springframework.context.annotation.Bean;
@@ -13,7 +14,7 @@ import java.time.Duration;
 public class RestClientConfig {
 
     @Bean
-    public RestClient.Builder restClientBuilder() {
+    public RestClient.Builder restClientBuilder(RestClientBuilderConfigurer configurer) {
         ClientHttpRequestFactorySettings settings = ClientHttpRequestFactorySettings.DEFAULTS
                 .withConnectTimeout(Duration.ofSeconds(5))  // 接続タイムアウト
                 .withReadTimeout(Duration.ofSeconds(5));  // 読み取りタイムアウト
@@ -23,6 +24,8 @@ public class RestClientConfig {
                         status -> true,
                         (request, response) -> { /* 何もしない */ })
                 .requestFactory(ClientHttpRequestFactories.get(settings));
+        // これが無いとLocalDateが配列に変換されてしまう
+        configurer.configure(builder);
         return builder;
     }
 

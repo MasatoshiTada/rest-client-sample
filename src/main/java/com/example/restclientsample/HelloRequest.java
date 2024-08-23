@@ -1,4 +1,6 @@
 package com.example.restclientsample;
 
-public record HelloRequest(String message) {
+import java.time.LocalDate;
+
+public record HelloRequest(String message, LocalDate date) {
 }
